@@ -38,14 +38,17 @@ namespace WebBot
 
             //Botão compartilhar
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            IWebElement ahrefFirstShare = wait.Until<IWebElement>(d => d.FindElement(By.ClassName("share_action_link")));
+            var ahrefFirstShare = wait.Until<IWebElement>(d => d.FindElement(By.ClassName("share_action_link")));
+            //var ahrefFirstShare = driver.FindElementByClassName("share_action_link");
             ahrefFirstShare.Click();
 
             //Botão compartilhar no grupo
-            driver.FindElementByClassName("_54nc").Click();
+            //var btnCompatilharEmGrupo = driver.FindElementByClassName("_54nh");
+            var btnCompatilharEmGrupo = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[contains(text(), 'Compartilhar em um grupo')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+            btnCompatilharEmGrupo.Click();
 
             //Caixa de texto para digitar nome do grupo
-            var txtGroupName = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")")));
+            var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")"));
             txtGroupName.SendKeys(groupName);
             txtGroupName.SendKeys(Keys.Down);
             txtGroupName.SendKeys(Keys.Return);
