@@ -24,7 +24,7 @@ namespace WebBot
 
             driver.Navigate().GoToUrl("https://www.facebook.com");
 
-            var txtEmail = driver.FindElementById("email");
+            var txtEmail = driver.FindElementById("emails");
             txtEmail.SendKeys(user);
 
             var txtPass = driver.FindElementById("pass");
