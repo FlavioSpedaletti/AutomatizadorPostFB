@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -17,9 +18,40 @@ namespace WebBot
             var driver = new ChromeDriver();
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2225388261117208";
-            var groupName = "Comunidade Scratch Brasil - Imagine, Programe, Compartilhe!";
-            var message = "Teste";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2229858494003518";
+            var message = "";
+
+            string[] gruposTecEdu =
+            {
+                //"Ciência, Tecnologia e Inclusão na Educação",
+                //"Code Club Brasil",
+                //"Computação na Escola",
+                //"Comunidade Scratch Brasil - Imagine, Programe, Compartilhe!",
+                //"Cultura MAKER na Educação Básica",
+                //"Educação Maker",
+                //"Edukidsdigital - Crianças e Tecnologia",
+                //"Grupo de Estudos sobre TIC e Educação Matemática",
+                //"Leitores de NOVA ESCOLA",
+                //"Pensamento Computacional Brasil",
+                //"Professores Usando Tecnologias Educacionais na Sala De Aula",
+                //"Scratch e Aprendizagem Criativa",
+                "SENATED - Seminário Nacional de Tecnologias na Educação"
+                //"Tecnologia da Informação e Comunicação - TIC",
+                //"Tecnologias & Educação",
+                //"TIC Educação"
+            };
+
+            string[] gruposProfessores =
+            {
+                "Ideias para Professores de  Educação Infantil e Ensino Fundamental",
+                "PROFESSORES ALFABETIZADORES",
+                "Professores da Educação Infantil e Fundamental I",
+                "professores do ensino fundamental",
+                "Professores do Estado de São Paulo",
+                "Professores Educação Infantil e Ensino Fundamental",
+                "Professores Estado São Paulo"
+            };
+
             #endregion
 
             driver.Navigate().GoToUrl("https://www.facebook.com");
@@ -34,34 +66,74 @@ namespace WebBot
 
             Console.ReadKey();
 
-            driver.Navigate().GoToUrl(postUrl);
+            var sucesso = new List<string>();
+            var erro = new List<string>();
 
-            //Botão compartilhar
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            var ahrefFirstShare = wait.Until<IWebElement>(d => d.FindElement(By.ClassName("share_action_link")));
-            //var ahrefFirstShare = driver.FindElementByClassName("share_action_link");
-            ahrefFirstShare.Click();
+            var todosGrupos = gruposTecEdu.Union(gruposProfessores);
+            foreach (string grupo in gruposTecEdu)
+            {
+                try
+                {
+                    driver.Navigate().GoToUrl(postUrl);
 
-            //Botão compartilhar no grupo
-            //var btnCompatilharEmGrupo = driver.FindElementByClassName("_54nh");
-            var btnCompatilharEmGrupo = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[contains(text(), 'Compartilhar em um grupo')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
-            btnCompatilharEmGrupo.Click();
+                    //Botão compartilhar
+                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                    var ahrefFirstShare = wait.Until<IWebElement>(d => d.FindElement(By.ClassName("share_action_link")));
+                    ahrefFirstShare.Click();
 
-            //Caixa de texto para digitar nome do grupo
-            var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")"));
-            txtGroupName.SendKeys(groupName);
-            txtGroupName.SendKeys(Keys.Down);
-            txtGroupName.SendKeys(Keys.Return);
+                    //Botão compartilhar no grupo
+                    var btnCompatilharEmGrupo = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[contains(text(), 'Compartilhar em um grupo')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+                    btnCompatilharEmGrupo.Click();
 
-            //Caixa de texto para escrever mensagem de compartilhamento (opcional)
-            //var txtMsg = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[contains(text(), 'Say something about this...')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue");
-            var txtMsg = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[aria-autocomplete='list']\")");
-            txtMsg.Click();
-            txtMsg.SendKeys(message);
+                    //Caixa de texto para digitar nome do grupo
+                    var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")"));
+                    txtGroupName.SendKeys(grupo);
+                    //Método 1, que nem sempre funciona porque a busca do Facebook não é por termos exatos
+                    //txtGroupName.SendKeys(Keys.Down);
+                    //txtGroupName.SendKeys(Keys.Return);
 
-            //Botão Post
-            //var btnPost = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\")")));
-            //btnPost.Click();
+                    //Método 2, que sempre procura pelo item da lista que contenha o texto exato
+                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
+                    itemGroupList.Click();
+
+                    //não encontrou o do grupo pelo nome
+                    if (txtGroupName.GetAttribute("value") != grupo)
+                        throw new Exception("Não encontrou o do grupo pelo nome");
+
+                    //Caixa de texto para escrever mensagem de compartilhamento (opcional)
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        var txtMsg = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[aria-autocomplete='list']\")");
+                        txtMsg.Click();
+                        txtMsg.SendKeys(message);
+                    }
+                    
+                    //Botão Post
+                    var btnPost = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).
+                                        ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\") ||" +
+                                                             "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
+                    btnPost.Click();
+
+                    sucesso.Add(grupo);
+
+                    Thread.Sleep(1000);
+                }
+                catch(Exception ex)
+                {
+                    erro.Add(grupo + " - " + ex.Message);
+                }
+            }
+
+            if (sucesso.Count > 0)
+            {
+                Console.WriteLine("\n\n****************** POSTADOS COM SUCESSO ******************\n");
+                Console.Write(string.Join("\n", sucesso));
+            }
+            if (erro.Count > 0)
+            {
+                Console.WriteLine("\n\n\n******************** POSTADOS COM ERRO *******************\n");
+                Console.Write(string.Join("\n", erro));
+            }
 
             Console.ReadKey();
         }
