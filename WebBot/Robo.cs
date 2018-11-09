@@ -23,33 +23,61 @@ namespace WebBot
 
             string[] gruposTecEdu =
             {
-                //"Ciência, Tecnologia e Inclusão na Educação",
-                //"Code Club Brasil",
-                //"Computação na Escola",
-                //"Comunidade Scratch Brasil - Imagine, Programe, Compartilhe!",
-                //"Cultura MAKER na Educação Básica",
-                //"Educação Maker",
-                //"Edukidsdigital - Crianças e Tecnologia",
-                //"Grupo de Estudos sobre TIC e Educação Matemática",
-                //"Leitores de NOVA ESCOLA",
-                //"Pensamento Computacional Brasil",
-                //"Professores Usando Tecnologias Educacionais na Sala De Aula",
-                //"Scratch e Aprendizagem Criativa",
-                "SENATED - Seminário Nacional de Tecnologias na Educação"
-                //"Tecnologia da Informação e Comunicação - TIC",
-                //"Tecnologias & Educação",
-                //"TIC Educação"
+                "Aprendizagem Criativa",
+                "BLOG DA UKTECH",
+                "Cidadãos Pela Educação, Ciência, Tecnologia e Inovação",
+                "Ciência, Tecnologia e Inclusão na Educação",
+                "Code Club Brasil",
+                "Computação na Escola",
+                "Comunidade Scratch Brasil - Imagine, Programe, Compartilhe!",
+                "Cultura MAKER na Educação Básica",
+                "Design instrucional e tecnologias educacionais",
+                "Educação Maker",
+                "Edukidsdigital - Crianças e Tecnologia",
+                "Grupo de Estudos sobre TIC e Educação Matemática",
+                "Leitores de NOVA ESCOLA",
+                "Makers | Juntos fazemos mais",
+                "MÍDIAS E TECNOLOGIAS NA EDUCAÇÃO",
+                "Movimento Maker",
+                "Parallax -Educação & Tecnologia",
+                "Pensamento Computacional Brasil",
+                "Pensando em Códigos",
+                "Professores Usando Tecnologias Educacionais na Sala De Aula",
+                "Robótica e programação em escolas do Brasil",
+                "Robótica Livre",
+                "Scratch e Aprendizagem Criativa",
+                "SENATED - Seminário Nacional de Tecnologias na Educação",
+                "Tecnologia da Informação e Comunicação - TIC",
+                "Tecnologia na Educação",
+                "Tecnologia para Educação - Idéias, debates e sugestões.",
+                "Tecnologias em Educação",
+                "Tecnologias na Educação",
+                "Tecnologias na Educação - Ensinando e Aprendendo com as TIC",
+                "Tecnologias & Educação",
+                "TIC Educação",
+                "TIC na Educação Básica",
+                "TIC Tecnologia de Informação e Comunicação",
+                "TICS na Educação"
             };
 
             string[] gruposProfessores =
             {
+                "Grupo Professores da Educação Infantil e Ensino Fundamental I Coruja Sabida",
                 "Ideias para Professores de  Educação Infantil e Ensino Fundamental",
                 "PROFESSORES ALFABETIZADORES",
+                "Professores compartilhando saberes",
+                "Professores da Educação Infantil",
+                "Professores da Educação Infantil e Fundamental",
                 "Professores da Educação Infantil e Fundamental I",
+                "PROFESSORES DA PREFEITURA DE SÃO PAULO",
+                "Professores do Brasil",
                 "professores do ensino fundamental",
                 "Professores do Estado de São Paulo",
+                "Professores do Estado de S.P.",
+                "Professores do Fundamental I - 1º ao 5º ano.",
                 "Professores Educação Infantil e Ensino Fundamental",
                 "Professores Estado São Paulo"
+                //"Trocando experiências entre professores 🎓" //https://unicode.org/emoji/charts/full-emoji-list.html
             };
 
             #endregion
@@ -70,7 +98,7 @@ namespace WebBot
             var erro = new List<string>();
 
             var todosGrupos = gruposTecEdu.Union(gruposProfessores);
-            foreach (string grupo in gruposTecEdu)
+            foreach (string grupo in todosGrupos)
             {
                 try
                 {
@@ -94,7 +122,10 @@ namespace WebBot
 
                     //Método 2, que sempre procura pelo item da lista que contenha o texto exato
                     var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
-                    itemGroupList.Click();
+                    //assim não estava clicando em alguns casos, dava o erro "Element is not clickable at point (X, Y). Other element would receive the click: ..."
+                    //itemGroupList.Click();
+                    Actions actions = new Actions(driver);
+                    actions.MoveToElement(itemGroupList).Click().Perform();
 
                     //não encontrou o do grupo pelo nome
                     if (txtGroupName.GetAttribute("value") != grupo)
@@ -113,10 +144,8 @@ namespace WebBot
                                         ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\") ||" +
                                                              "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
                     btnPost.Click();
-
                     sucesso.Add(grupo);
-
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 }
                 catch(Exception ex)
                 {
