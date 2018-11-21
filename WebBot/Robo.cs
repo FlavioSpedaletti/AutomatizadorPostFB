@@ -15,10 +15,12 @@ namespace WebBot
         public void Execute()
         {
             #region Configurações
-            var driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            //options.AddArguments("--headless");
+            var driver = new ChromeDriver(options);
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2229858494003518";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2239437633045604";
             var message = "";
 
             string[] gruposTecEdu =
@@ -35,7 +37,7 @@ namespace WebBot
                 "Educação Maker",
                 "Edukidsdigital - Crianças e Tecnologia",
                 "Grupo de Estudos sobre TIC e Educação Matemática",
-                "Leitores de NOVA ESCOLA",
+                //"Leitores de NOVA ESCOLA",
                 "Makers | Juntos fazemos mais",
                 "MÍDIAS E TECNOLOGIAS NA EDUCAÇÃO",
                 "Movimento Maker",
@@ -98,7 +100,7 @@ namespace WebBot
             var erro = new List<string>();
 
             var todosGrupos = gruposTecEdu.Union(gruposProfessores);
-            foreach (string grupo in todosGrupos)
+            foreach (string grupo in gruposTecEdu)
             {
                 try
                 {
@@ -121,7 +123,8 @@ namespace WebBot
                     //txtGroupName.SendKeys(Keys.Return);
 
                     //Método 2, que sempre procura pelo item da lista que contenha o texto exato
-                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
+                    //var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
+                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[text()='" + grupo + "']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
                     //assim não estava clicando em alguns casos, dava o erro "Element is not clickable at point (X, Y). Other element would receive the click: ..."
                     //itemGroupList.Click();
                     Actions actions = new Actions(driver);
@@ -145,7 +148,7 @@ namespace WebBot
                                                              "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
                     btnPost.Click();
                     sucesso.Add(grupo);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1500);
                 }
                 catch(Exception ex)
                 {
