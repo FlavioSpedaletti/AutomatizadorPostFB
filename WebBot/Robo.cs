@@ -41,6 +41,8 @@ namespace WebBot
                 "Educação Maker",
                 "Educação Tecnologias e Inovação",
                 "Edukidsdigital - Crianças e Tecnologia",
+                "Gamificação da Pedagogia",
+                "Gamificação na educação",
                 "Grupo de Estudos sobre TIC e Educação Matemática",
                 "IFG - Instituto Federal de Educação Ciência e Tecnologia de Goiás",
                 "Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco (IFPE)",
