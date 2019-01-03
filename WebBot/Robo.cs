@@ -16,11 +16,17 @@ namespace WebBot
         {
             #region Configurações
             ChromeOptions options = new ChromeOptions();
-            //options.AddArguments("--headless");
-            var driver = new ChromeDriver(options);
+            ChromeDriver driver;
+            WebDriverWait wait;
+            options.AddArguments("--start-maximized");
+            options.AddArguments("disable-infobars");
+            driver = new ChromeDriver(Environment.CurrentDirectory, options, TimeSpan.FromMinutes(5)); //global timeout
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromMinutes(5);
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)); //explicit wait -> Equivalent as Thread.Sleep(20000), but these code will wait only as long as required
+
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2239437633045604";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2270941039895263";
             var message = "";
 
             string[] gruposTecEdu =
@@ -44,9 +50,7 @@ namespace WebBot
                 "Gamificação da Pedagogia",
                 "Gamificação na educação",
                 "Grupo de Estudos sobre TIC e Educação Matemática",
-                "IFG - Instituto Federal de Educação Ciência e Tecnologia de Goiás",
                 "Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco (IFPE)",
-                //"Leitores de NOVA ESCOLA",
                 "Makers | Juntos fazemos mais",
                 "Metodologias Ativas",
                 "MÍDIAS E TECNOLOGIAS NA EDUCAÇÃO",
@@ -56,7 +60,6 @@ namespace WebBot
                 "Pensando em Códigos",
                 "Professores Usando Tecnologias Educacionais na Sala De Aula",
                 "REDES de APRENDIZAGEM: Educação e Tecnologia",
-                "Robótica e programação em escolas do Brasil",
                 "Robótica Livre",
                 "Scratch",
                 "Scratch e Aprendizagem Criativa",
@@ -120,8 +123,7 @@ namespace WebBot
                     driver.Navigate().GoToUrl(postUrl);
 
                     //Botão compartilhar
-                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                    var ahrefFirstShare = wait.Until<IWebElement>(d => d.FindElement(By.ClassName("share_action_link")));
+                    var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//a[contains(text(), 'Compartilhar')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
                     ahrefFirstShare.Click();
 
                     //Botão compartilhar no grupo
