@@ -26,7 +26,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2270941039895263";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2279021772420523";
             var message = "";
 
             string[] gruposTecEdu =
@@ -34,7 +34,7 @@ namespace WebBot
                 "Aprendizagem Criativa",
                 "Arduino e Scratch",
                 "BLOG DA UKTECH",
-                "CET&D- Ciência,Educação,Tecnologia e Didática",
+                //"CET&D- Ciência,Educação,Tecnologia e Didática",
                 "Cidadãos Pela Educação, Ciência, Tecnologia e Inovação",
                 "Ciência, Tecnologia e Inclusão na Educação",
                 "Code Club Brasil",
@@ -50,7 +50,7 @@ namespace WebBot
                 "Gamificação da Pedagogia",
                 "Gamificação na educação",
                 "Grupo de Estudos sobre TIC e Educação Matemática",
-                "Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco (IFPE)",
+                //"Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco (IFPE)",
                 "Makers | Juntos fazemos mais",
                 "Metodologias Ativas",
                 "MÍDIAS E TECNOLOGIAS NA EDUCAÇÃO",
@@ -137,6 +137,8 @@ namespace WebBot
                     //txtGroupName.SendKeys(Keys.Down);
                     //txtGroupName.SendKeys(Keys.Return);
 
+                    Thread.Sleep(1000);
+
                     //Método 2, que sempre procura pelo item da lista que contenha o texto exato
                     //var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
                     var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[text()='" + grupo + "']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
@@ -156,12 +158,30 @@ namespace WebBot
                         txtMsg.Click();
                         txtMsg.SendKeys(message);
                     }
-                    
+
+                    //Incluir publicação original
+                    var divIncluirPublicacaoOriginal = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[text()='Incluir publicação original']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+                    var lblIncluirPublicacaoOriginal = divIncluirPublicacaoOriginal.FindElement(By.TagName("label"));
+                    lblIncluirPublicacaoOriginal.Click();
+
                     //Botão Post
                     var btnPost = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).
                                         ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\") ||" +
                                                              "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
                     btnPost.Click();
+
+                    //AQUI PODE TER UMA VERIFICAÇÃO DE SEGURANÇA (RECAPTCHA)
+                    var temCaptcha = (bool)((IJavaScriptExecutor)driver).ExecuteScript("return document.getElementById('captca-recaptcha') !== undefined");
+                    if (temCaptcha)
+                    {
+                        var iFrameCaptcha = driver.FindElement(By.Id("captca-recaptcha"));
+                        driver.SwitchTo().Frame(iFrameCaptcha);
+                        var outroIFrame = driver.FindElement(By.TagName("iframe"));
+                        driver.SwitchTo().Frame(outroIFrame);
+                        var captcha = driver.FindElement(By.ClassName("recaptcha-checkbox-checkmark"));
+                        captcha.Click();
+                    }
+
                     sucesso.Add(grupo);
                     Thread.Sleep(1500);
                 }
