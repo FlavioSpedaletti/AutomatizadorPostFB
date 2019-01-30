@@ -26,7 +26,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2279021772420523";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2290241117965255";
             var message = "";
 
             string[] gruposTecEdu =
@@ -59,6 +59,7 @@ namespace WebBot
                 "Pensamento Computacional Brasil",
                 "Pensando em Códigos",
                 "Professores Usando Tecnologias Educacionais na Sala De Aula",
+                "Recursos Educacionais Abertos",
                 "REDES de APRENDIZAGEM: Educação e Tecnologia",
                 "Robótica Livre",
                 "Scratch",
@@ -171,15 +172,18 @@ namespace WebBot
                     btnPost.Click();
 
                     //AQUI PODE TER UMA VERIFICAÇÃO DE SEGURANÇA (RECAPTCHA)
-                    var temCaptcha = (bool)((IJavaScriptExecutor)driver).ExecuteScript("return document.getElementById('captca-recaptcha') !== undefined");
+                    var temCaptcha = (bool)((IJavaScriptExecutor)driver).ExecuteScript("return document.getElementById('captca-recaptcha') !== undefined && document.getElementById('captca-recaptcha') !== null");
                     if (temCaptcha)
                     {
-                        var iFrameCaptcha = driver.FindElement(By.Id("captca-recaptcha"));
-                        driver.SwitchTo().Frame(iFrameCaptcha);
-                        var outroIFrame = driver.FindElement(By.TagName("iframe"));
-                        driver.SwitchTo().Frame(outroIFrame);
-                        var captcha = driver.FindElement(By.ClassName("recaptcha-checkbox-checkmark"));
-                        captcha.Click();
+                        //var iFrameCaptcha = driver.FindElement(By.Id("captca-recaptcha"));
+                        //driver.SwitchTo().Frame(iFrameCaptcha);
+                        //var outroIFrame = driver.FindElement(By.TagName("iframe"));
+                        //driver.SwitchTo().Frame(outroIFrame);
+                        //var captcha = driver.FindElement(By.ClassName("recaptcha-checkbox-checkmark"));
+                        //captcha.Click();
+                        erro.Add(grupo + " - Captcha detected!!");
+                        Thread.Sleep(10000);
+                        continue;
                     }
 
                     sucesso.Add(grupo);
