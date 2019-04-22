@@ -26,7 +26,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2290241117965255";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2347417785580921";
             var message = "";
 
             string[] gruposTecEdu =
@@ -40,6 +40,7 @@ namespace WebBot
                 "Code Club Brasil",
                 "Computação na Escola",
                 "Comunidade Scratch Brasil - Imagine, Programe, Compartilhe!",
+                "Crianças&Tecnologia",
                 "Cultura MAKER na Educação Básica",
                 "Design instrucional e tecnologias educacionais",
                 "Educação,Tecnologia e Trabalho",
