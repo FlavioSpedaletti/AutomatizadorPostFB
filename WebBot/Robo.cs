@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
@@ -26,7 +25,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2347417785580921";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2354268611562505";
             var message = "";
 
             string[] gruposTecEdu =
@@ -56,6 +55,7 @@ namespace WebBot
                 "Metodologias Ativas",
                 "MÍDIAS E TECNOLOGIAS NA EDUCAÇÃO",
                 "Movimento Maker",
+                "Neurociência, Educação e suas Tecnologias",
                 "Parallax -Educação & Tecnologia",
                 "Pensamento Computacional Brasil",
                 "Pensando em Códigos",
