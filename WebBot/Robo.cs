@@ -25,7 +25,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2354268611562505";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2388339744822058";
             var message = "";
 
             string[] gruposTecEdu =
@@ -125,8 +125,9 @@ namespace WebBot
                     driver.Navigate().GoToUrl(postUrl);
 
                     //Trocar perfil
-                    var img = "https://scontent.fcgh9-1.fna.fbcdn.net/v/t1.0-1/p32x32/44057206_2215151852140849_6414425517889421312_n.png?_nc_cat=106&_nc_ht=scontent.fcgh9-1.fna&oh=38efbdf8e2c27fff30002bf5581d19a6&oe=5D5CB378";
-                    var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"img[src='" +  img + "']\").parentElement.parentElement.parentElement"));
+                    //var img = "https://scontent.fcgh9-1.fna.fbcdn.net/v/t1.0-1/p32x32/44057206_2215151852140849_6414425517889421312_n.png?_nc_cat=106&_nc_ht=scontent.fcgh9-1.fna&oh=38efbdf8e2c27fff30002bf5581d19a6&oe=5D5CB378";
+                    //var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"img[src='" +  img + "']\").parentElement.parentElement.parentElement"));
+                    var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('span.accessible_elem').parentNode.firstElementChild.firstElementChild.firstElementChild"));
                     ahrefTrocarPerfil.Click();
                     Thread.Sleep(1000);
                     var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('div[data-tooltip-content=\"Flavio Spedaletti\"').parentElement.parentElement.parentElement.parentElement"));
@@ -197,7 +198,7 @@ namespace WebBot
                     }
 
                     sucesso.Add(grupo);
-                    Thread.Sleep(1500);
+                    Thread.Sleep(2500);
                 }
                 catch(Exception ex)
                 {
