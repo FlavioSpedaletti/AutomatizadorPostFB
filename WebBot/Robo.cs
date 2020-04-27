@@ -25,7 +25,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2388339744822058";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2677212999268063";
             var message = "";
 
             string[] gruposTecEdu =
@@ -127,15 +127,18 @@ namespace WebBot
                     //Trocar perfil
                     //var img = "https://scontent.fcgh9-1.fna.fbcdn.net/v/t1.0-1/p32x32/44057206_2215151852140849_6414425517889421312_n.png?_nc_cat=106&_nc_ht=scontent.fcgh9-1.fna&oh=38efbdf8e2c27fff30002bf5581d19a6&oe=5D5CB378";
                     //var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"img[src='" +  img + "']\").parentElement.parentElement.parentElement"));
-                    var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('span.accessible_elem').parentNode.firstElementChild.firstElementChild.firstElementChild"));
+                    //var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('span.accessible_elem').parentNode.firstElementChild.firstElementChild.firstElementChild"));
+                    var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('button[aria-label=\"Seletor de voz\"')"));
                     ahrefTrocarPerfil.Click();
                     Thread.Sleep(1000);
-                    var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('div[data-tooltip-content=\"Flavio Spedaletti\"').parentElement.parentElement.parentElement.parentElement"));
+                    //var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('div[data-tooltip-content=\"Flavio Spedaletti\"').parentElement.parentElement.parentElement.parentElement"));
+                    var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[text()='Flavio Spedaletti']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement.parentElement.parentElement.parentElement"));
                     divPerfilFlavio.Click();
                     Thread.Sleep(1000);
 
                     //Botão compartilhar
-                    var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//a[contains(text(), 'Compartilhar')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+                    //var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//a[contains(text(), 'Compartilhar')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+                    var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[text()='Compartilhar']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement"));
                     ahrefFirstShare.Click();
 
                     //Botão compartilhar no grupo
@@ -143,7 +146,8 @@ namespace WebBot
                     btnCompatilharEmGrupo.Click();
 
                     //Caixa de texto para digitar nome do grupo
-                    var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")"));
+                    //var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"input[name='audience_group']\")"));
+                    var txtGroupName = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('input[placeholder=\"Procurar grupos\"')"));
                     txtGroupName.SendKeys(grupo);
                     //Método 1, que nem sempre funciona porque a busca do Facebook não é por termos exatos
                     //txtGroupName.SendKeys(Keys.Down);
@@ -152,53 +156,55 @@ namespace WebBot
                     Thread.Sleep(1000);
 
                     //Método 2, que sempre procura pelo item da lista que contenha o texto exato
-                    //var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
-                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[text()='" + grupo + "']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
-                    //assim não estava clicando em alguns casos, dava o erro "Element is not clickable at point (X, Y). Other element would receive the click: ..."
-                    //itemGroupList.Click();
-                    Actions actions = new Actions(driver);
-                    actions.MoveToElement(itemGroupList).Click().Perform();
+                    ////var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[contains(text(), '" + grupo + "')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
+                    //var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//ul/li//span[text()='" + grupo + "']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue")));
+                    ////assim não estava clicando em alguns casos, dava o erro "Element is not clickable at point (X, Y). Other element would receive the click: ..."
+                    ////itemGroupList.Click();
+                    //Actions actions = new Actions(driver);
+                    //actions.MoveToElement(itemGroupList).Click().Perform();
+                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div//span[text()='Compartilhar']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement.parentElement.parentElement")));
+                    itemGroupList.Click();
 
-                    //não encontrou o do grupo pelo nome
-                    if (txtGroupName.GetAttribute("value") != grupo)
-                        throw new Exception("Não encontrou o do grupo pelo nome");
+                    ////não encontrou o do grupo pelo nome
+                    //if (txtGroupName.GetAttribute("value") != grupo)
+                    //    throw new Exception("Não encontrou o do grupo pelo nome");
 
-                    //Caixa de texto para escrever mensagem de compartilhamento (opcional)
-                    if (!string.IsNullOrEmpty(message))
-                    {
-                        var txtMsg = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[aria-autocomplete='list']\")");
-                        txtMsg.Click();
-                        txtMsg.SendKeys(message);
-                    }
+                    ////Caixa de texto para escrever mensagem de compartilhamento (opcional)
+                    //if (!string.IsNullOrEmpty(message))
+                    //{
+                    //    var txtMsg = (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[aria-autocomplete='list']\")");
+                    //    txtMsg.Click();
+                    //    txtMsg.SendKeys(message);
+                    //}
 
-                    //Incluir publicação original
-                    var divIncluirPublicacaoOriginal = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[text()='Incluir publicação original']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
-                    var lblIncluirPublicacaoOriginal = divIncluirPublicacaoOriginal.FindElement(By.TagName("label"));
-                    lblIncluirPublicacaoOriginal.Click();
+                    ////Incluir publicação original
+                    //var divIncluirPublicacaoOriginal = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[text()='Incluir publicação original']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
+                    //var lblIncluirPublicacaoOriginal = divIncluirPublicacaoOriginal.FindElement(By.TagName("label"));
+                    //lblIncluirPublicacaoOriginal.Click();
 
-                    //Botão Post
-                    var btnPost = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).
-                                        ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\") ||" +
-                                                             "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
-                    btnPost.Click();
+                    ////Botão Post
+                    //var btnPost = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).
+                    //                    ExecuteScript("return document.querySelector(\"div[data-tooltip-content='People who can see posts in the group'] + div > button:nth-child(2)\") ||" +
+                    //                                         "document.querySelector(\"div[data-tooltip-content='Pessoas que podem ver publicações no grupo'] + div > button:nth-child(2)\")"));
+                    //btnPost.Click();
 
-                    //AQUI PODE TER UMA VERIFICAÇÃO DE SEGURANÇA (RECAPTCHA)
-                    var temCaptcha = (bool)((IJavaScriptExecutor)driver).ExecuteScript("return document.getElementById('captca-recaptcha') !== undefined && document.getElementById('captca-recaptcha') !== null");
-                    if (temCaptcha)
-                    {
-                        //var iFrameCaptcha = driver.FindElement(By.Id("captca-recaptcha"));
-                        //driver.SwitchTo().Frame(iFrameCaptcha);
-                        //var outroIFrame = driver.FindElement(By.TagName("iframe"));
-                        //driver.SwitchTo().Frame(outroIFrame);
-                        //var captcha = driver.FindElement(By.ClassName("recaptcha-checkbox-checkmark"));
-                        //captcha.Click();
-                        erro.Add(grupo + " - Captcha detected!!");
-                        Thread.Sleep(10000);
-                        continue;
-                    }
+                    ////AQUI PODE TER UMA VERIFICAÇÃO DE SEGURANÇA (RECAPTCHA)
+                    //var temCaptcha = (bool)((IJavaScriptExecutor)driver).ExecuteScript("return document.getElementById('captca-recaptcha') !== undefined && document.getElementById('captca-recaptcha') !== null");
+                    //if (temCaptcha)
+                    //{
+                    //    //var iFrameCaptcha = driver.FindElement(By.Id("captca-recaptcha"));
+                    //    //driver.SwitchTo().Frame(iFrameCaptcha);
+                    //    //var outroIFrame = driver.FindElement(By.TagName("iframe"));
+                    //    //driver.SwitchTo().Frame(outroIFrame);
+                    //    //var captcha = driver.FindElement(By.ClassName("recaptcha-checkbox-checkmark"));
+                    //    //captcha.Click();
+                    //    erro.Add(grupo + " - Captcha detected!!");
+                    //    Thread.Sleep(10000);
+                    //    continue;
+                    //}
 
                     sucesso.Add(grupo);
-                    Thread.Sleep(2500);
+                    Thread.Sleep(4000);
                 }
                 catch(Exception ex)
                 {
