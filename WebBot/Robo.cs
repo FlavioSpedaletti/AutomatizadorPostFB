@@ -25,7 +25,7 @@ namespace WebBot
 
             var user = "flavio.hfs@gmail.com";
             var pass = "xxxx";
-            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2677212999268063";
+            var postUrl = "https://www.facebook.com/PequenosDEVS/posts/2765144423808253";
             var message = "";
 
             string[] gruposTecEdu =
@@ -118,7 +118,7 @@ namespace WebBot
             var erro = new List<string>();
 
             var todosGrupos = gruposTecEdu.Union(gruposProfessores);
-            foreach (string grupo in gruposTecEdu)
+            foreach (string grupo in todosGrupos)
             {
                 try
                 {
@@ -130,15 +130,15 @@ namespace WebBot
                     //var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('span.accessible_elem').parentNode.firstElementChild.firstElementChild.firstElementChild"));
                     var ahrefTrocarPerfil = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('button[aria-label=\"Seletor de voz\"')"));
                     ahrefTrocarPerfil.Click();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                     //var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector('div[data-tooltip-content=\"Flavio Spedaletti\"').parentElement.parentElement.parentElement.parentElement"));
                     var divPerfilFlavio = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[text()='Flavio Spedaletti']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement.parentElement.parentElement.parentElement"));
                     divPerfilFlavio.Click();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
 
                     //Botão compartilhar
                     //var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//a[contains(text(), 'Compartilhar')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"));
-                    var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div[text()='Compartilhar']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement"));
+                    var ahrefFirstShare = wait.Until<IWebElement>(d => (IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//span[text()='Compartilhar']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement"));
                     ahrefFirstShare.Click();
 
                     //Botão compartilhar no grupo
@@ -162,7 +162,7 @@ namespace WebBot
                     ////itemGroupList.Click();
                     //Actions actions = new Actions(driver);
                     //actions.MoveToElement(itemGroupList).Click().Perform();
-                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.evaluate(\"//div//span[text()='Compartilhar']\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement.parentElement.parentElement")));
+                    var itemGroupList = wait.Until<IWebElement>(d => ((IWebElement)((IJavaScriptExecutor)driver).ExecuteScript("return document.querySelector(\"div[aria-label='Compartilhar']\")")));
                     itemGroupList.Click();
 
                     ////não encontrou o do grupo pelo nome
